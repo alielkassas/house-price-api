@@ -3,11 +3,20 @@ from fastapi import FastAPI
 import joblib
 import pandas as pd
 
-app = FastAPI()
+app = FastAPI(title="House Price Prediction API", version="1.0.0")
 
 Instrumentator().instrument(app).expose(app)
 
 model = joblib.load("model.pkl")
+
+@app.get("/", tags=["System"])
+def root():
+    return {
+        "service": app.title,
+        "version": app.version,
+        "status": "running",
+        "timestamp": datetime.utcnow().isoformat() + "Z"
+    }
 
 @app.get("/health")
 def health():
