@@ -2,6 +2,7 @@ from prometheus_fastapi_instrumentator import Instrumentator
 from fastapi import FastAPI
 import joblib
 import pandas as pd
+from datetime import datetime
 
 app = FastAPI(title="House Price Prediction API", version="1.0.0")
 
