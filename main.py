@@ -12,6 +12,14 @@ model = joblib.load("model.pkl")
 def health():
     return {"status": "healthy"}
 
+@app.get("/ready")
+def ready():
+
+    if model is None:
+        return {"ready": False}
+
+    return {"ready": True}
+
 @app.post("/predict")
 def predict(data: dict):
 
