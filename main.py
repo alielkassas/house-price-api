@@ -4,12 +4,13 @@ import joblib
 import pandas as pd
 from datetime import datetime
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from prometheus_client import generate_latest
 from fastapi import Depends
 import secrets
 
 app = FastAPI(title="House Price Prediction API", version="1.0.0")
 
-Instrumentator().instrument(app).expose(app)
+
 
 model = joblib.load("model.pkl")
 
