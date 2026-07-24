@@ -3,6 +3,9 @@ from fastapi import FastAPI
 import joblib
 import pandas as pd
 from datetime import datetime
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi import Depends
+import secrets
 
 app = FastAPI(title="House Price Prediction API", version="1.0.0")
 
@@ -19,6 +22,33 @@ def root():
         "timestamp": datetime.utcnow().isoformat() + "Z"
     }
 
+security = HTTPBasic()
+
+
+def verify_metrics(credentials: HTTPBasicCredentials = Depends(security)):
+
+    correct_username = secrets.compare_digest(
+        credentials.username,
+        "gr"
+    )
+
+    correct_password = secrets.compare_digest(
+        credentials.password,
+        "123"
+    )
+
+    if not (correct_username and correct_password):
+        raise Exception("Invalid credentials")
+
+
+@app.get("/metrics")
+def metrics(credentials: HTTPBasicCredentials = Depends(verify_metrics)):
+
+    return Response(
+        generate_latest(),
+        media_type="text/plain"
+    )
+    
 @app.get("/health")
 def health():
     return {"status": "healthy"}
