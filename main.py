@@ -8,6 +8,10 @@ Instrumentator().instrument(app).expose(app)
 
 model = joblib.load("model.pkl")
 
+@app.get("/health")
+def health():
+    return {"status": "healthy"}
+
 @app.post("/predict")
 def predict(data: dict):
 
