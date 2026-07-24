@@ -4,6 +4,8 @@ import pandas as pd
 
 app = FastAPI()
 
+Instrumentator().instrument(app).expose(app)
+
 model = joblib.load("model.pkl")
 
 @app.post("/predict")
