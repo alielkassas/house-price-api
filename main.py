@@ -1,5 +1,5 @@
 from prometheus_fastapi_instrumentator import Instrumentator
-from fastapi import FastAPI
+from fastapi import FastAPI, Response, HTTPException
 import joblib
 import pandas as pd
 from datetime import datetime
@@ -27,19 +27,15 @@ security = HTTPBasic()
 
 
 def verify_metrics(credentials: HTTPBasicCredentials = Depends(security)):
-
-    correct_username = secrets.compare_digest(
-        credentials.username,
-        "gr"
-    )
-
-    correct_password = secrets.compare_digest(
-        credentials.password,
-        "123"
-    )
+    correct_username = secrets.compare_digest(credentials.username, "gr")
+    correct_password = secrets.compare_digest(credentials.password, "123")
 
     if not (correct_username and correct_password):
-        raise Exception("Invalid credentials")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="user or pass incorrect",
+            headers={"WWW-Authenticate": "Basic"},
+        )
 
 
 @app.get("/metrics")
