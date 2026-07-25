@@ -10,7 +10,7 @@ import secrets
 
 app = FastAPI(title="House Price Prediction API", version="1.0.0")
 
-
+Instrumentator().instrument(app)
 
 model = joblib.load("model.pkl")
 
